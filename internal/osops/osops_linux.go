@@ -7,6 +7,8 @@ import (
 	"os/user"
 	"os/exec"
 	"strings"
+	"regexp"
+	"syscall"
 )
 
 type linuxEngine struct {
@@ -97,6 +99,55 @@ func (l *linuxEngine) CheckServiceStatus(name string) (string, error) {
 		return "not_found", nil
 	}
 	return "stopped", nil
+}
+
+func (l *linuxEngine) GetSysctlValue(key string) (string, error) {
+	path := "/proc/sys/" + strings.ReplaceAll(key, ".", "/")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return "", fmt.Errorf("sysctl key %s not found", key)
+	}
+	return strings.TrimSpace(string(content)), nil
+}
+
+func (l *linuxEngine) GetFilePermissions(path string) (string, string, string, error) {
+	stat, err := os.Stat(path)
+	if err != nil {
+		return "", "", "", err
+	}
+	
+	sysStat := stat.Sys().(*syscall.Stat_t)
+	mode := fmt.Sprintf("%04o", stat.Mode().Perm())
+	
+	owner := fmt.Sprint(sysStat.Uid)
+	if u, err := user.LookupId(owner); err == nil {
+		owner = u.Username
+	}
+	
+	group := fmt.Sprint(sysStat.Gid)
+	if g, err := user.LookupGroupId(group); err == nil {
+		group = g.Name
+	}
+	
+	return mode, owner, group, nil
+}
+
+func (l *linuxEngine) CheckFileRegex(path string, regexPattern string) (bool, string, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return false, "", err
+	}
+	
+	re, err := regexp.Compile("(?m)" + regexPattern)
+	if err != nil {
+		return false, "", fmt.Errorf("invalid regex pattern: %v", err)
+	}
+	
+	match := re.FindString(string(content))
+	if match != "" {
+		return true, strings.TrimSpace(match), nil
+	}
+	return false, "", nil
 }
 
 // dummy implementation for Linux to satisfy interface

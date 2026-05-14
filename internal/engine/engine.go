@@ -193,7 +193,56 @@ func (e *HardeningEngine) EvaluateRules() []Result {
 					result.Message = fmt.Sprintf("%s Service is %s (Expected: %s)", rule.CheckTarget, status, rule.CheckValue)
 				}
 			}
-			
+		
+		case CheckTypeSysctl:
+			actualVal, err := e.osEngine.GetSysctlValue(rule.CheckTarget)
+			if err != nil {
+				result.Status = "Error"
+				result.Message = err.Error()
+			} else {
+				result.CurrentValue = actualVal
+				if actualVal == rule.CheckValue {
+					result.Status = "Passed"
+					result.Message = "Kernel parameter is configured securely"
+				} else {
+					result.Status = "Failed"
+					result.Message = fmt.Sprintf("Expected %s, but found %s", rule.CheckValue, actualVal)
+				} // need to UPDATE this for more readable messages for certain sysctl keys like ipv4 forwarding, etc.
+			}
+
+		case CheckTypeFilePerm:
+			// Target format expected: "MODE|OWNER|GROUP" (e.g. "0644|root|root")
+			mode, owner, group, err := e.osEngine.GetFilePermissions(rule.CheckTarget)
+			if err != nil {
+				result.Status = "Error"
+				result.Message = err.Error()
+			} else {
+				actualPerms := fmt.Sprintf("%s|%s|%s", mode, owner, group)
+				result.CurrentValue = actualPerms
+				if actualPerms == rule.CheckValue {
+					result.Status = "Passed"
+					result.Message = "File permissions and ownership match policy"
+				} else {
+					result.Status = "Failed"
+					result.Message = fmt.Sprintf("Found %s (Expected %s)", actualPerms, rule.CheckValue)
+				}
+			}
+
+		case CheckTypeFileRegex:
+			matched, actualLine, err := e.osEngine.CheckFileRegex(rule.CheckTarget, rule.CheckValue)
+			if err != nil {
+				result.Status = "Error"
+				result.Message = err.Error()
+			} else if matched {
+				result.Status = "Passed"
+				result.CurrentValue = actualLine
+				result.Message = "Configuration line found and matches securely"
+			} else {
+				result.Status = "Failed"
+				result.CurrentValue = "Not Found / Mismatch"
+				result.Message = "Required configuration line is missing or commented out"
+			}
+
 		default:
 			result.Status = "Error"
 			result.Message = fmt.Sprintf("Unknown check_type: %s", rule.CheckType)

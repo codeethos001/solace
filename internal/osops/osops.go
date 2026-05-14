@@ -1,25 +1,22 @@
 package osops
 
-// import (
-// 	"errors"
-// )
-
 type OSEngine interface {
 	GetOSName() string
 	CheckPrivileges() (bool, error)
 	GetLogPaths() []string
 
 	// Common
-	CheckServiceStatus(serviceName string) (string, error) // Returns "running", "stopped", "not_found"
+	CheckServiceStatus(serviceName string) (string, error)
 
 	// linux specific
 	CheckKernelModuleLoaded(moduleName string) (bool, error)
 	CheckMountPoint(path string) (isSeparate bool, options []string, err error)
+	GetSysctlValue(key string) (string, error)
+	GetFilePermissions(path string) (mode string, owner string, group string, err error)
+	CheckFileRegex(path string, regexPattern string) (bool, string, error)
 
 	// windows specific
 	GetSeceditValue(key string) (string, error)
 	GetRegistryValue(path string, key string) (string, error)
 
 }
-
-// var ErrUnsupportedOS = errors.New("unsupported operating system")

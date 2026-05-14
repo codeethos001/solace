@@ -1,0 +1,40 @@
+rules:
+  - id: LIN-PERM-01
+    title: "Ensure permissions on /etc/passwd are configured"
+    os: linux
+    category: "System Maintenance"
+    check_type: file_perm
+    check_target: /etc/passwd
+    check_value: "0644|root|root"
+
+  - id: LIN-PERM-02
+    title: "Ensure permissions on /etc/shadow are configured"
+    os: linux
+    category: "System Maintenance"
+    check_type: file_perm
+    check_target: /etc/shadow
+    check_value: "0640|root|root" # Tested on arch - expects 0600|root|root.
+
+  - id: LIN-PERM-03
+    title: "Ensure permissions on /etc/group are configured"
+    os: linux
+    category: "System Maintenance"
+    check_type: file_perm
+    check_target: /etc/group
+    check_value: "0644|root|root"
+
+  - id: LIN-SSH-01
+    title: "Ensure sshd PermitRootLogin is disabled"
+    os: linux
+    category: "Access Control"
+    check_type: file_regex
+    check_target: /etc/ssh/sshd_config
+    check_value: "^PermitRootLogin\\s+no$"
+
+  - id: LIN-SSH-02
+    title: "Ensure sshd PermitEmptyPasswords is disabled"
+    os: linux
+    category: "Access Control"
+    check_type: file_regex
+    check_target: /etc/ssh/sshd_config
+    check_value: "^PermitEmptyPasswords\\s+no$"

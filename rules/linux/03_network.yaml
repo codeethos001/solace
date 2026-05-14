@@ -1,0 +1,40 @@
+rules:
+  - id: LIN-NET-01
+    title: "Ensure ip forwarding is disabled"
+    os: linux
+    category: "Network Kernel Parameters"
+    check_type: sysctl
+    check_target: net.ipv4.ip_forward
+    check_value: "0"
+
+  - id: LIN-NET-02
+    title: "Ensure packet redirect sending is disabled"
+    os: linux
+    category: "Network Kernel Parameters"
+    check_type: sysctl
+    check_target: net.ipv4.conf.all.send_redirects
+    check_value: "0"
+
+  - id: LIN-NET-03
+    title: "Ensure bogus icmp responses are ignored"
+    os: linux
+    category: "Network Kernel Parameters"
+    check_type: sysctl
+    check_target: net.ipv4.icmp_ignore_bogus_error_responses
+    check_value: "1"
+
+  - id: LIN-NET-04
+    title: "Ensure broadcast icmp requests are ignored"
+    os: linux
+    category: "Network Kernel Parameters"
+    check_type: sysctl
+    check_target: net.ipv4.icmp_echo_ignore_broadcasts
+    check_value: "1"
+
+  - id: LIN-NET-05
+    title: "Ensure tcp syn cookies is enabled"
+    os: linux
+    category: "Network Kernel Parameters"
+    check_type: sysctl
+    check_target: net.ipv4.tcp_syncookies
+    check_value: "1"

@@ -116,5 +116,9 @@ func (w *windowsEngine) GetSeceditValue(key string) (string, error) {
 	return val, nil
 }
 
+// Dummy implementations for linux-specific checks
 func (w *windowsEngine) CheckKernelModuleLoaded(name string) (bool, error) { return false, nil }
 func (w *windowsEngine) CheckMountPoint(path string) (bool, []string, error) { return false, nil, nil }
+func (w *windowsEngine) GetSysctlValue(key string) (string, error) { return "", nil }
+func (w *windowsEngine) GetFilePermissions(path string) (string, string, string, error) { return "", "", "", nil }
+func (w *windowsEngine) CheckFileRegex(path string, regex string) (bool, string, error) { return false, "", nil }
