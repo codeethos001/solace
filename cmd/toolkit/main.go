@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"path/filepath" // for forward/backward slash compatibility
-
+	"os"
+	
+	"solace/internal/api"
 	"solace/internal/engine"
 	"solace/internal/osops"
 )
@@ -34,7 +36,13 @@ func main() {
 	}
 	fmt.Println("✔ YAML Rules loaded successuflly.")
 	fmt.Println("--------------------------------------------------")
-	
+
+	if len(os.Args) > 1 && os.Args[1] == "--serve" {
+		server := api.NewServer(hEngine, "8080")
+		log.Fatal(server.Start())
+		return // server blocks indefinitely
+	}
+
 	fmt.Println("evaluating...")
 	results := hEngine.EvaluateRules()
 

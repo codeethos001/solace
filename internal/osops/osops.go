@@ -14,6 +14,7 @@ type OSEngine interface {
 	GetSysctlValue(key string) (string, error)
 	GetFilePermissions(path string) (mode string, owner string, group string, err error)
 	CheckFileRegex(path string, regexPattern string) (bool, string, error)
+	RunCommand(name string, args ...string) (string, error)
 
 	// windows specific
 	GetSeceditValue(key string) (string, error)

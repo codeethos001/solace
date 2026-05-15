@@ -122,3 +122,9 @@ func (w *windowsEngine) CheckMountPoint(path string) (bool, []string, error) { r
 func (w *windowsEngine) GetSysctlValue(key string) (string, error) { return "", nil }
 func (w *windowsEngine) GetFilePermissions(path string) (string, string, string, error) { return "", "", "", nil }
 func (w *windowsEngine) CheckFileRegex(path string, regex string) (bool, string, error) { return false, "", nil }
+
+func (w *windowsEngine) RunCommand(name string, args ...string) (string, error) {
+	cmd := exec.Command(name, args...)
+	out, err := cmd.CombinedOutput()
+	return strings.TrimSpace(string(out)), err
+}

@@ -243,6 +243,27 @@ func (e *HardeningEngine) EvaluateRules() []Result {
 				result.Message = "Required configuration line is missing or commented out"
 			}
 
+		case CheckTypeCommand:
+			parts := strings.Split(rule.CheckTarget, " ")
+			if len(parts) == 0 {
+				result.Status = "Error"
+				result.Message = "Command target is empty"
+				break
+			}
+			out, err := e.osEngine.RunCommand(parts[0], parts[1:]...)
+			result.CurrentValue = out
+
+			if err != nil {
+				result.Status = "Failed"
+				result.Message = fmt.Sprintf("Command failed: %v", err)
+			} else if out == rule.CheckValue {
+				result.Status = "Passed"
+				result.Message = "Command output matches secure baseline"
+			} else {
+				result.Status = "Failed"
+				result.Message = fmt.Sprintf("Expected '%s', got '%s'", rule.CheckValue, out)
+			}
+			
 		default:
 			result.Status = "Error"
 			result.Message = fmt.Sprintf("Unknown check_type: %s", rule.CheckType)

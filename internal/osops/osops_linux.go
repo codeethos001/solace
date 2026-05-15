@@ -150,6 +150,12 @@ func (l *linuxEngine) CheckFileRegex(path string, regexPattern string) (bool, st
 	return false, "", nil
 }
 
+func (l *linuxEngine) RunCommand(name string, args ...string) (string, error) {
+	cmd := exec.Command(name, args...)
+	out, err := cmd.CombinedOutput()
+	return strings.TrimSpace(string(out)), err
+}
+
 // dummy implementation for Linux to satisfy interface
 func (l *linuxEngine) GetSeceditValue(key string) (string, error) {
 	return "", fmt.Errorf("secedit not supported on linux")
