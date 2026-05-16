@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.btn-primary {
+  @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition;
+}
+
+.btn-danger {
+  @apply px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition;
+}
+
+.btn-success {
+  @apply px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+}
+
+.badge-pass {
+  @apply inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold;
+}
+
+.badge-fail {
+  @apply inline-block bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold;
+}
+
+.badge-warning {
+  @apply inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold;
+}
+
+.badge-skipped {
+  @apply inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-semibold;
+}

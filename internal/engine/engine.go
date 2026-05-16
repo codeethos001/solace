@@ -63,6 +63,8 @@ func (e *HardeningEngine) EvaluateRules() []Result {
 			Title:         rule.Title,
 			ExpectedValue: rule.CheckValue,
 			Status:        "Skipped", // default
+			Severity:      rule.Severity,
+			ReferenceLink: rule.ReferenceLink,
 		}
 
 		if strings.ToLower(rule.OS) != currentOS {

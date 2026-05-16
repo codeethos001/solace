@@ -12,6 +12,9 @@ type Rule struct {
 	Severity    string    `json:"severity" yaml:"severity"`
 	Category    string    `json:"category" yaml:"category"`
 
+	// for advisory content
+	ReferenceLink string `json:"reference_link" yaml:"reference_link"`	
+
 	CheckType   CheckType `json:"check_type" yaml:"check_type"`
 	CheckTarget string    `json:"check_target" yaml:"check_target"`
 	CheckValue  string    `json:"check_value" yaml:"check_value"`
@@ -24,6 +27,8 @@ type Result struct {
 	CurrentValue  string `json:"current_value"`
 	ExpectedValue string `json:"expected_value"`
 	Message       string `json:"message"`
+	Severity      string `json:"severity"`
+	ReferenceLink string `json:"reference_link"`
 }
 
 type CheckType string

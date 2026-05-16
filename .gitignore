@@ -2,3 +2,6 @@
 /web/node_modules/
 
 /bin
+
+*.md
+!README.md
